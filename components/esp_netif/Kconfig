@@ -30,6 +30,11 @@ menu "ESP NETIF Adapter"
                 Dummy implementation of esp-netif functionality which connects driver transmit
                 to receive function. This option is for testing purpose only
 
+        config ESP_NETIF_RAW
+            bool "Raw"
+            help
+                Raw MAC send/receive implementation.
+
     endchoice
 
     config ESP_NETIF_USES_TCPIP_WITH_BSD_API

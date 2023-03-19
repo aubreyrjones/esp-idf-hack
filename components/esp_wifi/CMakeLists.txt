@@ -21,6 +21,7 @@ if(CONFIG_ESP_WIFI_ENABLED)
         "src/smartconfig.c"
         "src/wifi_init.c"
         "src/wifi_default.c"
+        "src/wifi_raw.c"
         "src/wifi_netif.c"
         "src/wifi_default_ap.c"
         "${idf_target}/esp_adapter.c")

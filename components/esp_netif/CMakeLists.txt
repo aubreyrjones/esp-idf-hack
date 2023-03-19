@@ -24,7 +24,7 @@ if(${target} STREQUAL "linux")
 endif()
 
 if(CONFIG_PPP_SUPPORT)
-    list(APPEND srcs_lwip lwip/esp_netif_lwip_ppp.c)
+    #list(APPEND srcs_lwip lwip/esp_netif_lwip_ppp.c)
 endif()
 
 
@@ -41,6 +41,8 @@ if(CONFIG_ESP_NETIF_LOOPBACK)
 elseif(CONFIG_ESP_NETIF_TCPIP_LWIP)
     list(APPEND srcs ${srcs_lwip})
     list(APPEND priv_include_dirs lwip)
+elseif(CONFIG_ESP_NETIF_RAW)
+    list(APPEND srcs raw_mac/esp_netif_rawmac.c)
 endif()
 
 idf_component_register(SRCS "${srcs}"
