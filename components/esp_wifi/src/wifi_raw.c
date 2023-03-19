@@ -13,6 +13,11 @@ static const char* TAG = "wifi_raw";
 
 static esp_wifi_raw_cb_t rxcb = NULL;
 
+void spam_out(const char *b, uint16_t len) {
+    for (int i = 0; i < len; i++) {
+        printf("%c", b[i]);
+    }
+}
 
 esp_err_t handle_raw(void *buffer, uint16_t len, void *eb) {
     if (rxcb) {
@@ -20,12 +25,16 @@ esp_err_t handle_raw(void *buffer, uint16_t len, void *eb) {
     }
 
     if (buffer) {
-        ESP_LOGI(TAG, "buffer: %lu", buffer);
+        ESP_LOGI(TAG, "buffer: %lu :%*.*s", buffer, len - 14, len - 14, buffer + 14);
+        //spam_out(buffer, len);
     }
 
+#if 0
     if (eb) {
-        ESP_LOGI(TAG, "eb: %lu", eb);
+        ESP_LOGI(TAG, "eb: %lu : %*.*s", eb, len, len, eb);
+        //spam_out(eb, len);
     }
+#endif
 
     if (buffer) {
         //esp_wifi_internal_free_rx_buffer(buffer);
