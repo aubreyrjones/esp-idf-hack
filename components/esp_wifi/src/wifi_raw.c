@@ -12,21 +12,11 @@
 static const char* TAG = "wifi_raw";
 
 static esp_wifi_raw_cb_t rxcb = NULL;
-
-void spam_out(const char *b, uint16_t len) {
-    for (int i = 0; i < len; i++) {
-        printf("%c", b[i]);
-    }
-}
+static void* rxcbUserData = NULL;
 
 esp_err_t handle_raw(void *buffer, uint16_t len, void *eb) {
     if (rxcb) {
-        rxcb(buffer, len);
-    }
-
-    if (buffer) {
-        ESP_LOGI(TAG, "buffer: %lu :%*.*s", buffer, len - 14, len - 14, buffer + 14);
-        //spam_out(buffer, len);
+        rxcb(buffer, len, rxcbUserData);
     }
 
 #if 0
@@ -36,11 +26,8 @@ esp_err_t handle_raw(void *buffer, uint16_t len, void *eb) {
     }
 #endif
 
-    if (buffer) {
-        //esp_wifi_internal_free_rx_buffer(buffer);
-    }
-
     if (eb) {
+        // I guess we free this one because it points to `buffer`?
         esp_wifi_internal_free_rx_buffer(eb);
     }
 
@@ -48,8 +35,10 @@ esp_err_t handle_raw(void *buffer, uint16_t len, void *eb) {
 }
 
 
-esp_err_t esp_wifi_raw_set_cb(wifi_interface_t iface, esp_wifi_raw_cb_t cb) {
+esp_err_t esp_wifi_raw_set_cb(wifi_interface_t iface, esp_wifi_raw_cb_t cb, void *userData) {
     bool firstTime = !rxcb;
+
+    rxcbUserData = userData; // kind of a race. :(
     rxcb = cb;
 
     if (firstTime) {
